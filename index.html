@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Revision Assistant — Team Vortenix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <div style="font-weight:800">Smart Revision Assistant</div>
+          <div class="subtitle">Team Vortenix — Your AI Study Companion</div>
+        </div>
+      </div>
+      <nav id="nav"></nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Dashboard -->
+    <section id="Dashboard" class="view">
+      <div class="grid">
+        <div class="panel" style="grid-column: span 7">
+          <div class="title">Real-time dashboard</div>
+          <div class="row">
+            <div class="stat" style="min-width:220px">
+              <div>Tasks due this week</div><div id="statDue" class="pill warn">0</div>
+            </div>
+            <div class="stat" style="min-width:220px">
+              <div>Quiz accuracy</div><div id="statAccuracy" class="pill good">—</div>
+            </div>
+            <div class="stat" style="min-width:220px">
+              <div>Study efficiency</div><div id="statEfficiency" class="pill">—</div>
+            </div>
+          </div>
+          <div class="subtitle">Visualize tasks, quiz performance, and efficiency trends</div>
+          <canvas id="miniChart" height="120" style="width:100%; background:#0b1220; border:1px solid var(--border); border-radius:10px"></canvas>
+        </div>
+
+        <div class="panel" style="grid-column: span 5">
+          <div class="title">Notifications</div>
+          <div id="notifList" class="list"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn" id="btnGenerateNotif">Generate reminders</button>
+            <button class="btn secondary" id="btnClearNotif">Clear</button>
+          </div>
+        </div>
+
+        <div class="panel" style="grid-column: span 12">
+          <div class="title">Upcoming tasks</div>
+          <table class="table" id="tableUpcoming">
+            <thead><tr><th>Title</th><th>Due</th><th>Priority</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planner -->
+    <section id="Planner" class="view hidden">
+      <div class="grid">
+        <div class="panel" style="grid-column: span 6">
+          <div class="title">Add task / deadline</div>
+          <div class="list">
+            <input id="taskTitle" placeholder="e.g., DSA revision — Trees" />
+            <textarea id="taskNotes" placeholder="Notes or context (optional)"></textarea>
+            <div class="row">
+              <input id="taskDue" type="date" />
+              <select id="taskPriority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+            <button class="btn" id="btnAddTask">Add to planner</button>
+          </div>
+        </div>
+
+        <div class="panel" style="grid-column: span 6">
+          <div class="title">Adaptive planner</div>
+          <div class="subtitle">Auto-suggest daily schedule from your tasks and progress</div>
+          <div id="planSuggestions" class="list"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn" id="btnGeneratePlan">Generate plan</button>
+            <button class="btn secondary" id="btnClearPlan">Clear suggestions</button>
+          </div>
+        </div>
+
+        <div class="panel" style="grid-column: span 12">
+          <div class="title">Planner overview</div>
+          <table class="table" id="tablePlanner">
+            <thead><tr><th>Task</th><th>Due</th><th>Priority</th><th>Progress</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Center -->
+    <section id="Quiz Center" class="view hidden">
+      <div class="grid">
+        <div class="panel" style="grid-column: span 6">
+          <div class="title">Upload notes / paste text</div>
+          <div class="list">
+            <input type="file" id="fileInput" accept=".txt,.md,.pdf" />
+            <input type="url" id="urlInput" placeholder="Or paste a webpage URL" />
+            <button class="btn secondary" id="btnFetchUrl">Fetch from URL</button>
+            <textarea id="rawNotes" placeholder="Paste notes or chat transcripts here"></textarea>
+            <div class="row">
+              <button class="btn" id="btnSummarize">Summarize</button>
+              <button class="btn secondary" id="btnGenerateQuiz">Generate quiz</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="grid-column: span 6">
+          <div class="title">Summary</div>
+          <div id="summaryBox" class="card"></div>
+        </div>
+
+        <div class="panel" style="grid-column: span 12">
+          <div class="title">Interactive quiz</div>
+          <div id="quizBox" class="list"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn" id="btnSubmitQuiz">Submit answers</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Collaboration -->
+    <section id="Collaboration" class="view hidden">
+      <div class="grid">
+        <div class="panel" style="grid-column: span 6">
+          <div class="title">Team room</div>
+          <div class="subtitle">Share notes, align goals, and stay updated</div>
+          <div class="list">
+            <input id="teamName" placeholder="Study team name (e.g., Vortenix DSA)" />
+            <textarea id="teamNote" placeholder="Share a note/update to your team"></textarea>
+            <div class="row">
+              <button class="btn" id="btnPostNote">Post note</button>
+              <button class="btn secondary" id="btnClearRoom">Clear room</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="grid-column: span 6">
+          <div class="title">Room feed</div>
+          <div id="roomFeed" class="list"></div>
+        </div>
+
+        <div class="panel" style="grid-column: span 12">
+          <div class="title">Shared deadlines</div>
+          <table class="table" id="tableShared">
+            <thead><tr><th>Task</th><th>Due</th><th>Priority</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Tutor -->
+    <section id="AI Tutor" class="view hidden">
+      <div class="grid">
+        <div class="panel" style="grid-column: span 12">
+          <div class="title">AI Study Tutor</div>
+          <div class="subtitle">Ask questions about your study material and get AI-powered explanations</div>
+          <div id="chatHistory" class="list" style="max-height: 400px; overflow-y: auto; margin-bottom: 16px;"></div>
+          <div class="row">
+            <input id="chatInput" placeholder="Ask a question about your studies..." style="flex: 1;" />
+            <button class="btn" id="btnSendChat">Send</button>
+            <button class="btn secondary" id="btnClearChat">Clear</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Built by Team Vortenix — Smart Revision Assistant (Local demo). For production, connect to a backend/LLM.</div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
